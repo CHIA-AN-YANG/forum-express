@@ -46,7 +46,7 @@ const adminController = {
             
             let imgStorage
 
-            if (process.env.NODE_ENV !== 'production'){
+            if (process.env.NODE_ENV === 'production'){
                     imgStorage = img.data.link
               }else{imgStorage = `/upload/user-upload/${file.originalname}`}
 
@@ -97,7 +97,7 @@ const adminController = {
           return Restaurant.findByPk(req.params.id)
           .then((restaurant) => {
             let imgStorage
-            if (process.env.NODE_ENV !== 'production'){
+            if (process.env.NODE_ENV === 'production'){
                     imgStorage = img.data.link
               }else{imgStorage = `/upload/user-upload/${file.originalname}`}
 

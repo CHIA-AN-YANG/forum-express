@@ -15,9 +15,9 @@
     "logging": false
   },
   "production": {
-    "use_env_variable": "DATABASE_URL",
-    "dialect": "postgres",
-    "protocol": "postgres",
+    "use_env_variable": "CLEARDB_DATABASE_URL",
+    "dialect": "mysql",
+    "host": "127.0.0.1",
     "dialectOptions": {
       "ssl": { "rejectUnauthorized": false }
     }
