@@ -1,7 +1,8 @@
-const bcrypt = require('bcryptjs') 
 const db = require('../models')
 const Restaurant = db.Restaurant
 const fs = require('fs')
+const imgur = require('imgur-node-api')
+const IMGUR_CLIENT_ID = '26b0737b69bb564'
 
 const adminController = {
   getRestaurants: (req, res) => {
@@ -38,16 +39,24 @@ const adminController = {
       return res.redirect('back')
     }
     if (file) {
+      imgur.setClientID(IMGUR_CLIENT_ID)
       fs.readFile(file.path, (err, data) => {
           if (err) console.log('Error: ', err)
           fs.writeFile(`upload/${file.originalname}`, data, () => {
+            
+            let imgStorage
+
+            if (process.env.NODE_ENV !== 'production'){
+                    imgStorage = img.data.link
+              }else{imgStorage = `/upload/user-upload/${file.originalname}`}
+
             return Restaurant.create({
               name: req.body.name,
               tel: req.body.tel,
               address: req.body.address,
               opening_hours: req.body.opening_hours,
               description: req.body.description,
-              image: file ? `/upload/user-upload/${file.originalname}` : null
+              image: file ? imgStorage : null
             })
             .then((restaurant) => {
               req.flash('success_messages', 'restaurant was successfully created')
@@ -81,18 +90,24 @@ const adminController = {
       return res.redirect('back')
     }
     if (file) {
+      imgur.setClientID(IMGUR_CLIENT_ID)
       fs.readFile(file.path, (err, data) => {
         if (err) console.log('Error: ', err)
         fs.writeFile(`upload/${file.originalname}`, data, () => {
           return Restaurant.findByPk(req.params.id)
           .then((restaurant) => {
+            let imgStorage
+            if (process.env.NODE_ENV !== 'production'){
+                    imgStorage = img.data.link
+              }else{imgStorage = `/upload/user-upload/${file.originalname}`}
+
             restaurant.update({
               name: req.body.name,
               tel: req.body.tel,
               address: req.body.address,
               opening_hours: req.body.opening_hours,
               description: req.body.description,
-              image: `/upload/user-upload/${file.originalname}`
+              image: imgStorage
             })                        
           })          
           .then(() => {
